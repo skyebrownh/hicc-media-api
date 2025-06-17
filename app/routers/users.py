@@ -6,4 +6,4 @@ router = APIRouter(prefix="/users")
 
 @router.get("/")
 async def get_users():
-    return await supabase_get("users")
+    return supabase_get("users")

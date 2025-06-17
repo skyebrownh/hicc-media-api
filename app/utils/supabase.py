@@ -1,15 +1,10 @@
-import httpx
+from supabase import create_client, Client
 
 from .env import *
 
-async def supabase_get(table: str):
-    url = f"{SUPABASE_URL}/{table}"
-    headers = {
-        "apikey": SUPABASE_API_KEY,
-        "Authorization": f"Bearer {SUPABASE_API_KEY}"
-    }
+url = SUPABASE_URL
+key = SUPABASE_API_KEY
+supabase: Client = create_client(url, key)
 
-    async with httpx.AsyncClient() as client:
-        response = await client.get(url, headers=headers)
-        response.raise_for_status()
-        return response.json()
+def supabase_get(table: str):
+    return supabase.table(table).select("*").execute()
