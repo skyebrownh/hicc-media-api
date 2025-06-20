@@ -16,6 +16,15 @@ def test_supabase_get_all(supabase_service, clean_teams_table):
     assert response[0].get("team_name") == "Team 1"
     assert response[1].get("lookup") == "team2"
 
+    with pytest.raises(TypeError):
+        supabase_service.get()
+
+    with pytest.raises(HTTPException):
+        supabase_service.get(None)
+
+    with pytest.raises(HTTPException):
+        supabase_service.get("invalid_table")
+
 def test_supabase_get(supabase_service, clean_teams_table):
     # setup: insert teams
     team_a = supabase_service.post("teams", body={"team_name": "Team A", "lookup": "team_a"})
@@ -55,9 +64,18 @@ def test_table_id():
     assert table_id("users") == "user_id"
     assert table_id("user_availability") == "user_availability_id"
 
-def test_validate_response():
+def test_validate(supabase_service, clean_teams_table):
+    # setup: insert team
+    supabase_service.post("teams", body={"team_name": "TEST", "lookup": "test"})
+
+    query_api_error = supabase_service.client.table("invalid").select("*")
     with pytest.raises(HTTPException):
-        validate_response(None)
+        validate(query_api_error)
+
+    query_not_found_error = supabase_service.client.table("teams").select("*").eq("team_id", "00000000-0000-0000-0000-000000000000")
+    with pytest.raises(HTTPException):
+        validate(query_not_found_error)
     
-    with pytest.raises(HTTPException):
-        validate_response([])
+    query = supabase_service.client.table("teams").select("*")
+    response = validate(query)
+    assert len(response.data) > 0
