@@ -1,12 +1,20 @@
 import pytest
 from app.utils.supabase import *
-from app.utils.env import SUPABASE_TEST_URL, SUPABASE_TEST_API_KEY
 
-def test_supabase_post():
-    supabase = SupabaseService(url=SUPABASE_TEST_URL, key=SUPABASE_TEST_API_KEY)
-    response = supabase.post("teams", body={"team_name": "TEST TEAM", "lookup": "testteam"})
+def test_supabase_post(supabase_service, clean_teams_table):
+    response = supabase_service.post("teams", body={"team_name": "TEST TEAM", "lookup": "testteam"})
     assert response.get("team_name") == "TEST TEAM"
     assert response.get("lookup") == "testteam"
+
+def test_supabase_get_all(supabase_service, clean_teams_table):
+    # setup: insert teams
+    supabase_service.post("teams", body={"team_name": "Team 1", "lookup": "team1"})
+    supabase_service.post("teams", body={"team_name": "Team 2", "lookup": "team2"})
+
+    response = supabase_service.get("teams")
+    assert len(response) > 0
+    assert response[0].get("team_name") == "Team 1"
+    assert response[1].get("lookup") == "team2"
 
 # helper functions
 def test_table_id():
