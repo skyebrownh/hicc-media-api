@@ -16,6 +16,18 @@ def test_supabase_get_all(supabase_service, clean_teams_table):
     assert response[0].get("team_name") == "Team 1"
     assert response[1].get("lookup") == "team2"
 
+def test_supabase_get(supabase_service, clean_teams_table):
+    # setup: insert teams
+    teamA = supabase_service.post("teams", body={"team_name": "Team A", "lookup": "teamA"})
+    teamB = supabase_service.post("teams", body={"team_name": "Team B", "lookup": "teamB"})
+
+    responseA = supabase_service.get("teams", id=teamA.get("team_id"))
+    responseB = supabase_service.get("teams", id=teamB.get("team_id"))
+
+    assert responseA[0].get("team_name") == "Team A"
+    assert responseB[0].get("lookup") == "teamB"
+    assert responseB[0].get("team_id") == teamB.get("team_id")
+
 # helper functions
 def test_table_id():
     assert table_id("users") == "user_id"
