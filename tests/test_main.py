@@ -31,3 +31,24 @@ def test_post_user(test_client, clean_users_table):
     assert response.status_code == 200 
     assert response_json.get("first_name") == "NEW"
     assert response_json.get("is_active") == True 
+
+def test_update_user(test_client, setup_user):
+    setup_user_id = setup_user.get("user_id")
+
+    empty_json = {}
+    invalid_json2 = {"user_id": "00000000-0000-0000-0000-000000000000"}
+    valid_json = {"first_name": "UPDATED", "phone": "4565551234"}
+
+    response1 = test_client.patch(f"/users/{setup_user_id}", json=empty_json)
+    assert response1.status_code == 404 
+    assert setup_user.get("first_name") == "TEST"
+
+    response2 = test_client.patch(f"/users/{setup_user_id}", json=invalid_json2)
+    assert response2.status_code == 404
+    
+    response = test_client.patch(f"/users/{setup_user_id}", json=valid_json)
+    response_json = response.json()
+    assert response.status_code == 200
+    assert response_json.get("first_name") == "UPDATED"
+    assert response_json.get("last_name") == "USER"
+    assert response_json.get("phone") == "4565551234"
