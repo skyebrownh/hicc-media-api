@@ -8,6 +8,6 @@ def supabase_service():
 
 @pytest.fixture()
 def clean_teams_table(supabase_service):
-    supabase_service.client.table("teams").delete().neq("team_id", "00000000-0000-0000-0000-000000000000").execute() # delete all teams
+    supabase_service.client.table("teams").delete().neq("team_id", "99999999-9999-9999-9999-999999999999").execute() # delete all teams
     yield
-    supabase_service.client.table("teams").delete().neq("team_id", "00000000-0000-0000-0000-000000000000").execute()
+    supabase_service.client.table("teams").delete().neq("team_id", "99999999-9999-9999-9999-999999999999").execute()

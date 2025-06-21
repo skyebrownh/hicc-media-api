@@ -52,36 +52,64 @@ def test_supabase_get_all(supabase_service, clean_teams_table):
 def test_supabase_get(supabase_service, clean_teams_table):
     # setup: insert teams
     team_a = supabase_service.post("teams", body={"team_name": "Team A", "lookup": "team_a"})
+    team_a_id = team_a.get("team_id")
     team_b = supabase_service.post("teams", body={"team_name": "Team B", "lookup": "team_b"})
+    team_b_id = team_b.get("team_id")
 
-    responseA = supabase_service.get("teams", id=team_a.get("team_id"))
-    responseB = supabase_service.get("teams", id=team_b.get("team_id"))
+    responseA = supabase_service.get("teams", id=team_a_id)
+    responseB = supabase_service.get("teams", id=team_b_id)
 
     assert responseA[0].get("team_name") == "Team A"
     assert responseB[0].get("lookup") == "team_b"
-    assert responseB[0].get("team_id") == team_b.get("team_id")
+    assert responseB[0].get("team_id") == team_b_id
+
+    with pytest.raises(HTTPException, match="Not Found"):
+        supabase_service.get("teams", id="00000000-0000-0000-0000-000000000000")
 
 def test_supabase_update(supabase_service, clean_teams_table):
     # setup: insert team
     update_team = supabase_service.post("teams", body={"team_name": "UPDATE ME", "lookup": "updateteam"})
+    update_team_id = update_team.get("team_id")
 
-    supabase_service.update("teams", body={"team_name": "NEW"}, id=update_team.get("team_id"))
-    response = supabase_service.get("teams", id=update_team.get("team_id"))
+    supabase_service.update("teams", body={"team_name": "NEW"}, id=update_team_id)
+    response = supabase_service.get("teams", id=update_team_id)
 
     assert response[0].get("team_name") == "NEW"
     assert response[0].get("lookup") == "updateteam"
 
+    with pytest.raises(TypeError):
+        supabase_service.update()
+
+    with pytest.raises(HTTPException, match="API Error"):
+        supabase_service.update("invalid_table", {"team_name": "TEAM NAME"}, id=update_team_id)
+
+    with pytest.raises(HTTPException, match="cannot be updated"):
+        supabase_service.update("teams", body={"team_id": "00000000-0000-0000-0000-000000000000"}, id=update_team_id)
+
+    with pytest.raises(HTTPException, match="API Error"):
+        supabase_service.update("teams", body={"team_name": None}, id=update_team_id)
+
+    with pytest.raises(HTTPException, match="Not Found"):
+        supabase_service.update("teams", body={"team_name": "TEAM NAME"}, id="00000000-0000-0000-0000-000000000000")
+
 def test_supabase_delete(supabase_service, clean_teams_table):
     # setup: insert team
     delete_team = supabase_service.post("teams", body={"team_name": "DELETE ME", "lookup": "deleteme"})
+    delete_team_id = delete_team.get("team_id")
 
-    delete_response = supabase_service.delete("teams", id=delete_team.get("team_id"))
+    delete_response = supabase_service.delete("teams", id=delete_team_id)
 
-    assert delete_response.get("team_id") == delete_team.get("team_id")
+    assert delete_response.get("team_id") == delete_team_id
     assert delete_response.get("lookup") == "deleteme" 
 
+    with pytest.raises(TypeError):
+        supabase_service.delete()
+
+    with pytest.raises(HTTPException, match="API Error"):
+        supabase_service.delete("invalid_table", id=delete_team_id)
+
     with pytest.raises(HTTPException, match="Not Found"):
-        supabase_service.get("teams", id=delete_team.get("team_id"))
+        supabase_service.get("teams", id=delete_team_id)
 
 # helper functions
 def test_table_id():
