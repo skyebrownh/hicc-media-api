@@ -45,6 +45,9 @@ def test_update_user(test_client, setup_user):
 
     response2 = test_client.patch(f"/users/{setup_user_id}", json=invalid_json2)
     assert response2.status_code == 404
+
+    response3 = test_client.patch(f"/users/00000000-0000-0000-0000-000000000000", json=valid_json)
+    assert response3.status_code == 404
     
     response = test_client.patch(f"/users/{setup_user_id}", json=valid_json)
     response_json = response.json()
