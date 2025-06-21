@@ -22,3 +22,14 @@ def test_client(supabase_service):
     with TestClient(app) as client:
         yield client
     app.dependency_overrides = {} # cleans state after test
+
+@pytest.fixture
+def setup_user(supabase_service):
+    # insert test user
+    user = supabase_service.post("users", body={"first_name": "TEST", "last_name": "USER", "phone": "1235557890"})
+
+    # make available to tests
+    yield user
+
+    # clean up after tests
+    supabase_service.delete("users", user.get("user_id"))
