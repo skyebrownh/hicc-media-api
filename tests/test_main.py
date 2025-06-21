@@ -55,3 +55,13 @@ def test_update_user(test_client, setup_user):
     assert response_json.get("first_name") == "UPDATED"
     assert response_json.get("last_name") == "USER"
     assert response_json.get("phone") == "4565551234"
+
+def test_delete_user(test_client, setup_user):
+    response1 = test_client.delete(f"/users/00000000-0000-0000-0000-000000000000")
+    assert response1.status_code == 404
+
+    response = test_client.delete(f"/users/{setup_user.get("user_id")}")
+    response_json = response.json()
+    assert response.status_code == 200
+    assert response_json.get("user_id") == setup_user.get("user_id")
+    assert test_client.get(f"/users/{setup_user.get("user_id")}").status_code == 404

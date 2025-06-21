@@ -32,7 +32,7 @@ def setup_user(supabase_service):
     yield user
 
     # clean up after tests
-    supabase_service.delete("users", user.get("user_id"))
+    supabase_service.client.table("users").delete().neq("user_id", "99999999-9999-9999-9999-999999999999").execute()
 
 @pytest.fixture
 def clean_users_table(supabase_service):
