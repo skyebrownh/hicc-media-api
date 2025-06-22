@@ -20,6 +20,10 @@ class SupabaseService():
         return response.data[0]
 
     def update(self, table: str, body: dict, id: str):
+        # only applies to direct calls, not through FastAPI
+        if table_id(table) in body:
+            raise HTTPException(status_code=400, detail="Primary Key/ID cannot be updated")
+
         query = self.client.table(table).update(body).eq(table_id(table), id)
         response = validate(query)
         return response.data[0]
