@@ -38,6 +38,12 @@ def clean_media_roles_table(supabase_service):
     supabase_service.client.table("media_roles").delete().neq("media_role_id", BAD_GUID).execute()
 
 @pytest.fixture
+def clean_proficiency_levels_table(supabase_service):
+    supabase_service.client.table("proficiency_levels").delete().neq("proficiency_level_id", BAD_GUID).execute()
+    yield
+    supabase_service.client.table("proficiency_levels").delete().neq("proficiency_level_id", BAD_GUID).execute()
+
+@pytest.fixture
 def setup_user(supabase_service):
     user = supabase_service.post("users", body={"first_name": "TEST", "last_name": "USER", "phone": "1235557890"})
     yield user
@@ -54,3 +60,9 @@ def setup_media_role(supabase_service):
     media_role = supabase_service.post("media_roles", body={"media_role_name": "TEST MEDIA ROLE", "sort": 10, "lookup": "testmediarole"})
     yield media_role
     supabase_service.client.table("media_roles").delete().neq("media_role_id", BAD_GUID).execute()
+
+@pytest.fixture
+def setup_proficiency_level(supabase_service):
+    proficiency_level = supabase_service.post("proficiency_levels", body={"proficiency_level_name": "TEST PROFICIENCY LEVEL", "lookup": "testproficiencylevel"})
+    yield proficiency_level
+    supabase_service.client.table("proficiency_levels").delete().neq("proficiency_level_id", BAD_GUID).execute()
