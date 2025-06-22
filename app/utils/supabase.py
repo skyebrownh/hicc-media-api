@@ -35,13 +35,17 @@ class SupabaseService():
 
 # helper functions
 def table_id(table: str) -> str:
+    if table == "dates":
+        return "date"
+
     return f"{table[0:len(table) - 1] if table.endswith("s") else table}_id"
 
 def validate(query):
     try:
         response = query.execute()
-    except PostgrestAPIError:
-        raise HTTPException(status_code=500, detail="API Error occurred")
+    except PostgrestAPIError as e:
+        print("🔥 Supabase error:", e.message)
+        raise HTTPException(status_code=500, detail=f"API Error: {e.message}")
 
     if not response or len(response.data) == 0:
         raise HTTPException(status_code=404, detail="Resource Not Found")

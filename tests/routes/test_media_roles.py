@@ -18,7 +18,7 @@ def test_get_single_media_role(test_client, setup_media_role):
 def test_post_media_role(test_client, clean_media_roles_table):
     invalid_json1 = {}
     invalid_json2 = {"media_role_name": "INVALID MEDIA ROLE"}
-    valid_json = {"media_role_name": "NEW MEDIA ROLE", "lookup": "newmediarole"}
+    valid_json = {"media_role_name": "NEW MEDIA ROLE", "sort": 10, "lookup": "newmediarole"}
 
     response1 = test_client.post("/media_roles", json=invalid_json1)
     assert response1.status_code == 422 

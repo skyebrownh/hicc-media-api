@@ -31,23 +31,21 @@ def test_post_date(test_client, clean_dates_table):
     assert response_json.get("date") == "2025-01-01"
 
 def test_update_date(test_client, setup_date):
-    setup_date = setup_date.get("date")
-
     empty_json = {}
     invalid_json2 = {"date": "2012-01-01"}
     valid_json = {"is_holiday": True, "weekday_of_month": 1}
 
-    response1 = test_client.patch(f"/dates/{setup_date}", json=empty_json)
+    response1 = test_client.patch(f"/dates/{setup_date.get("date")}", json=empty_json)
     assert response1.status_code == 404 
     assert setup_date.get("date") == "2000-01-01"
 
-    response2 = test_client.patch(f"/dates/{setup_date}", json=invalid_json2)
+    response2 = test_client.patch(f"/dates/{setup_date.get("date")}", json=invalid_json2)
     assert response2.status_code == 404
 
     response3 = test_client.patch(f"/dates/2001-01-01", json=valid_json)
     assert response3.status_code == 404
     
-    response = test_client.patch(f"/dates/{setup_date}", json=valid_json)
+    response = test_client.patch(f"/dates/{setup_date.get("date")}", json=valid_json)
     response_json = response.json()
     assert response.status_code == 200
     assert response_json.get("is_holiday") == True 
