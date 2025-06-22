@@ -19,6 +19,7 @@ def test_client(supabase_service):
         yield client
     app.dependency_overrides = {} # cleans state after test
 
+# clean table fixtures
 @pytest.fixture
 def clean_users_table(supabase_service):
     supabase_service.client.table("users").delete().neq("user_id", BAD_GUID).execute()
@@ -44,6 +45,19 @@ def clean_proficiency_levels_table(supabase_service):
     supabase_service.client.table("proficiency_levels").delete().neq("proficiency_level_id", BAD_GUID).execute()
 
 @pytest.fixture
+def clean_schedule_date_types_table(supabase_service):
+    supabase_service.client.table("schedule_date_types").delete().neq("schedule_date_type_id", BAD_GUID).execute()
+    yield
+    supabase_service.client.table("schedule_date_types").delete().neq("schedule_date_type_id", BAD_GUID).execute()
+
+@pytest.fixture
+def clean_dates_table(supabase_service):
+    supabase_service.client.table("dates").delete().neq("date", "1900-01-01").execute()
+    yield
+    supabase_service.client.table("dates").delete().neq("date", "1900-01-01").execute()
+
+# setup fixtures
+@pytest.fixture
 def setup_user(supabase_service):
     user = supabase_service.post("users", body={"first_name": "TEST", "last_name": "USER", "phone": "1235557890"})
     yield user
@@ -66,3 +80,15 @@ def setup_proficiency_level(supabase_service):
     proficiency_level = supabase_service.post("proficiency_levels", body={"proficiency_level_name": "TEST PROFICIENCY LEVEL", "lookup": "testproficiencylevel"})
     yield proficiency_level
     supabase_service.client.table("proficiency_levels").delete().neq("proficiency_level_id", BAD_GUID).execute()
+
+@pytest.fixture
+def setup_schedule_date_type(supabase_service):
+    schedule_date_type = supabase_service.post("schedule_date_types", body={"schedule_date_type_name": "TEST SCHEDULE DATE TYPE", "lookup": "testscheduledatetype"})
+    yield schedule_date_type
+    supabase_service.client.table("schedule_date_types").delete().neq("schedule_date_type_id", BAD_GUID).execute()
+
+@pytest.fixture
+def setup_date(supabase_service):
+    date = supabase_service.post("dates", body={"date": "2000-01-01"})
+    yield date
+    supabase_service.client.table("dates").delete().neq("date", "1900-01-01").execute()
