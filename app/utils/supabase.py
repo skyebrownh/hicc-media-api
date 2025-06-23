@@ -1,6 +1,8 @@
 from fastapi import HTTPException
 from supabase import create_client, Client, PostgrestAPIError
 
+from app.utils.helpers import table_id
+
 class SupabaseService():
     def __init__(self, url, key):
         self.client: Client = create_client(url, key)
@@ -32,13 +34,6 @@ class SupabaseService():
         query = self.client.table(table).delete().eq(table_id(table), id)
         response = validate(query)
         return response.data[0]
-
-# helper functions
-def table_id(table: str) -> str:
-    if table == "dates":
-        return "date"
-
-    return f"{table[0:len(table) - 1] if table.endswith("s") else table}_id"
 
 def validate(query):
     try:
