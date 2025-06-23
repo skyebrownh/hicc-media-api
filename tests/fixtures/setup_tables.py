@@ -8,6 +8,7 @@ MEDIA_ROLE_PAYLOAD = {"media_role_name": "TEST MEDIA ROLE", "sort": 10, "lookup"
 MEDIA_ROLE_PAYLOAD2 = {"media_role_name": "MEDIA ROLE TWO", "sort": 20, "lookup": "mediaroletwo"}
 PROFICIENCY_LEVEL_PAYLOAD = {"proficiency_level_name": "TEST PROFICIENCY LEVEL", "lookup": "testproficiencylevel"}
 SCHEDULE_DATE_TYPE_PAYLOAD = {"schedule_date_type_name": "TEST SCHEDULE DATE TYPE", "lookup": "testscheduledatetype"}
+SCHEDULE_DATE_TYPE_PAYLOAD2 = {"schedule_date_type_name": "SCHEDULE DATE TYPE TWO", "lookup": "scheduledatetypetwo"}
 DATE_PAYLOAD = {"date": "2000-01-01"}
 SCHEDULE_PAYLOAD = {"month_start_date": "2000-01-01"}
 
@@ -95,25 +96,27 @@ def setup_user_role(supabase_service):
 
 @pytest.fixture
 def setup_schedule_date(supabase_service):
-    schedule = supabase_service.post("schedules", body=SCHEDULE_PAYLOAD)
     date = supabase_service.post("dates", body=DATE_PAYLOAD)
+    schedule = supabase_service.post("schedules", body=SCHEDULE_PAYLOAD)
     type = supabase_service.post("schedule_date_types", body=SCHEDULE_DATE_TYPE_PAYLOAD)
+    type2 = supabase_service.post("schedule_date_types", body=SCHEDULE_DATE_TYPE_PAYLOAD2)
     schedule_date = supabase_service.post("schedule_dates", body={
         "schedule_id": schedule.get("schedule_id"),
         "date": date.get("date"),
         "schedule_date_type_id": type.get("schedule_date_type_id")
     })
-    yield schedule_date
+    yield schedule_date, schedule, date, type, type2
     delete_all(supabase_service, table="schedule_dates")
     delete_all(supabase_service, table="schedules")
     delete_all(supabase_service, table="dates")
-    delete_all(supabase_service, table="schedule_date_type")
+    delete_all(supabase_service, table="schedule_date_types")
 
 @pytest.fixture
 def setup_schedule_date_role(supabase_service):
-    schedule = supabase_service.post("schedules", body=SCHEDULE_PAYLOAD)
     date = supabase_service.post("dates", body=DATE_PAYLOAD)
+    schedule = supabase_service.post("schedules", body=SCHEDULE_PAYLOAD)
     type = supabase_service.post("schedule_date_types", body=SCHEDULE_DATE_TYPE_PAYLOAD)
+    type2 = supabase_service.post("schedule_date_types", body=SCHEDULE_DATE_TYPE_PAYLOAD2)
     schedule_date = supabase_service.post("schedule_dates", body={
         "schedule_id": schedule.get("schedule_id"),
         "date": date.get("date"),
@@ -124,4 +127,10 @@ def setup_schedule_date_role(supabase_service):
         "schedule_date_id": schedule_date.get("schedule_date_id"),
         "media_role_id": media_role.get("media_role_id")
     })
-    yield schedule_date_role
+    yield schedule_date_role, date, type, type2, media_role
+    delete_all(supabase_service, table="schedule_date_roles")
+    delete_all(supabase_service, table="schedule_dates")
+    delete_all(supabase_service, table="media_roles")
+    delete_all(supabase_service, table="schedule_date_types")
+    delete_all(supabase_service, table="schedules")
+    delete_all(supabase_service, table="dates")
