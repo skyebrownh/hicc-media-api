@@ -10,6 +10,7 @@ PROFICIENCY_LEVEL_PAYLOAD = {"proficiency_level_name": "TEST PROFICIENCY LEVEL",
 SCHEDULE_DATE_TYPE_PAYLOAD = {"schedule_date_type_name": "TEST SCHEDULE DATE TYPE", "lookup": "testscheduledatetype"}
 SCHEDULE_DATE_TYPE_PAYLOAD2 = {"schedule_date_type_name": "SCHEDULE DATE TYPE TWO", "lookup": "scheduledatetypetwo"}
 DATE_PAYLOAD = {"date": "2000-01-01"}
+DATE_PAYLOAD2 = {"date": "2010-01-01"}
 SCHEDULE_PAYLOAD = {"month_start_date": "2000-01-01"}
 
 @pytest.fixture
@@ -60,8 +61,9 @@ def setup_schedule(supabase_service):
 def setup_user_availability(supabase_service):
     user = supabase_service.post("users", body=USER_PAYLOAD)
     date = supabase_service.post("dates", body=DATE_PAYLOAD)
+    date2 = supabase_service.post("dates", body=DATE_PAYLOAD2)
     ua = supabase_service.post("user_availability", body={"user_id": user.get("user_id"), "date": date.get("date")})
-    yield ua, user, date
+    yield ua, user, date, date2
     delete_all(supabase_service, table="user_availability")
     delete_all(supabase_service, table="dates")
     delete_all(supabase_service, table="users")
@@ -88,7 +90,7 @@ def setup_user_role(supabase_service):
         "media_role_id": media_role.get("media_role_id"), 
         "proficiency_level_id": proficiency_level.get("proficiency_level_id")
     })
-    yield user_role, user, media_role, media_role2
+    yield user_role, user, media_role, media_role2, proficiency_level
     delete_all(supabase_service, table="user_roles")
     delete_all(supabase_service, table="proficiency_levels")
     delete_all(supabase_service, table="media_roles")

@@ -1,5 +1,5 @@
 def test_get_all_user_availability(test_client, setup_user_availability):
-    ua, user, date = setup_user_availability
+    ua, user, date, date2 = setup_user_availability
     response = test_client.get("/user_availability")
     assert response.status_code == 200
 
@@ -8,7 +8,7 @@ def test_get_all_user_availability(test_client, setup_user_availability):
     assert response_json[0].get("user_availability_id") == ua.get("user_availability_id")
 
 def test_get_single_user_availability(test_client, setup_user_availability):
-    ua, user, date = setup_user_availability
+    ua, user, date, date2 = setup_user_availability
     response = test_client.get(f"/user_availability/{ua.get("user_availability_id")}")
     assert response.status_code == 200
 
@@ -18,7 +18,7 @@ def test_get_single_user_availability(test_client, setup_user_availability):
     assert response_json[0].get("user_id") == user.get("user_id")
 
 def test_post_user_availability(test_client, setup_user_availability):
-    ua, user, date = setup_user_availability
+    ua, user, date, date2 = setup_user_availability
     invalid_json1 = {}
     invalid_json2 = {"date": "2000-01-01"}
     valid_json = {"date": "2000-01-01", "user_id": user.get("user_id")}
@@ -36,12 +36,12 @@ def test_post_user_availability(test_client, setup_user_availability):
     assert response_json.get("user_id") == user.get("user_id") 
 
 def test_update_user_availability(test_client, setup_user_availability):
-    ua, user, date = setup_user_availability
+    ua, user, date, date2 = setup_user_availability
     ua_id = ua.get("user_availability_id")
 
     empty_json = {}
     invalid_json2 = {"user_availability_id": "00000000-0000-0000-0000-000000000000"}
-    valid_json = {"date": "2007-01-01"}
+    valid_json = {"date": "2010-01-01"}
 
     response1 = test_client.patch(f"/user_availability/{ua_id}", json=empty_json)
     assert response1.status_code == 404 
@@ -56,10 +56,10 @@ def test_update_user_availability(test_client, setup_user_availability):
     response = test_client.patch(f"/user_availability/{ua_id}", json=valid_json)
     response_json = response.json()
     assert response.status_code == 200
-    assert response_json.get("date") == "2007-01-01"
+    assert response_json.get("date") == "2010-01-01"
 
 def test_delete_user_availability(test_client, setup_user_availability):
-    ua, user, date = setup_user_availability
+    ua, user, date, date2 = setup_user_availability
     response1 = test_client.delete(f"/user_availability/00000000-0000-0000-0000-000000000000")
     assert response1.status_code == 404
 
