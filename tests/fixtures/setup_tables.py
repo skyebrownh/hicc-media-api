@@ -116,18 +116,18 @@ def setup_schedule_date_role(supabase_service):
     date = supabase_service.post("dates", body=DATE_PAYLOAD)
     schedule = supabase_service.post("schedules", body=SCHEDULE_PAYLOAD)
     type = supabase_service.post("schedule_date_types", body=SCHEDULE_DATE_TYPE_PAYLOAD)
-    type2 = supabase_service.post("schedule_date_types", body=SCHEDULE_DATE_TYPE_PAYLOAD2)
     schedule_date = supabase_service.post("schedule_dates", body={
         "schedule_id": schedule.get("schedule_id"),
         "date": date.get("date"),
         "schedule_date_type_id": type.get("schedule_date_type_id")
     })
-    media_role = supabase_service.post("media_role", body=MEDIA_ROLE_PAYLOAD)
+    media_role = supabase_service.post("media_roles", body=MEDIA_ROLE_PAYLOAD)
+    media_role2 = supabase_service.post("media_roles", body=MEDIA_ROLE_PAYLOAD2)
     schedule_date_role = supabase_service.post("schedule_date_roles", body={
         "schedule_date_id": schedule_date.get("schedule_date_id"),
         "media_role_id": media_role.get("media_role_id")
     })
-    yield schedule_date_role, date, type, type2, media_role
+    yield schedule_date_role, schedule_date, date, media_role, media_role2
     delete_all(supabase_service, table="schedule_date_roles")
     delete_all(supabase_service, table="schedule_dates")
     delete_all(supabase_service, table="media_roles")
