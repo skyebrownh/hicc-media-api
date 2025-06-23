@@ -5,6 +5,7 @@ USER_PAYLOAD = {"first_name": "TEST", "last_name": "USER", "phone": "1235557890"
 TEAM_PAYLOAD = {"team_name": "TEST TEAM", "lookup": "testteam"}
 TEAM_PAYLOAD2 = {"team_name": "TEAM TWO", "lookup": "teamtwo"}
 MEDIA_ROLE_PAYLOAD = {"media_role_name": "TEST MEDIA ROLE", "sort": 10, "lookup": "testmediarole"}
+MEDIA_ROLE_PAYLOAD2 = {"media_role_name": "MEDIA ROLE TWO", "sort": 20, "lookup": "mediaroletwo"}
 PROFICIENCY_LEVEL_PAYLOAD = {"proficiency_level_name": "TEST PROFICIENCY LEVEL", "lookup": "testproficiencylevel"}
 SCHEDULE_DATE_TYPE_PAYLOAD = {"schedule_date_type_name": "TEST SCHEDULE DATE TYPE", "lookup": "testscheduledatetype"}
 DATE_PAYLOAD = {"date": "2000-01-01"}
@@ -79,13 +80,14 @@ def setup_team_user(supabase_service):
 def setup_user_role(supabase_service):
     user = supabase_service.post("users", body=USER_PAYLOAD)
     media_role = supabase_service.post("media_roles", body=MEDIA_ROLE_PAYLOAD)
+    media_role2 = supabase_service.post("media_roles", body=MEDIA_ROLE_PAYLOAD2)
     proficiency_level = supabase_service.post("proficiency_levels", body=PROFICIENCY_LEVEL_PAYLOAD)
     user_role = supabase_service.post("user_roles", body={
         "user_id": user.get("user_id"), 
         "media_role_id": media_role.get("media_role_id"), 
         "proficiency_level_id": proficiency_level.get("proficiency_level_id")
     })
-    yield user_role, user, media_role
+    yield user_role, user, media_role, media_role2
     delete_all(supabase_service, table="user_roles")
     delete_all(supabase_service, table="proficiency_levels")
     delete_all(supabase_service, table="media_roles")
