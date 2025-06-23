@@ -90,7 +90,7 @@ def setup_user_role(supabase_service):
         "media_role_id": media_role.get("media_role_id"), 
         "proficiency_level_id": proficiency_level.get("proficiency_level_id")
     })
-    yield user_role, user, media_role, media_role2
+    yield user_role, user, media_role, media_role2, proficiency_level
     delete_all(supabase_service, table="user_roles")
     delete_all(supabase_service, table="proficiency_levels")
     delete_all(supabase_service, table="media_roles")

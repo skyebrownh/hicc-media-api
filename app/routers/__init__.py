@@ -7,6 +7,6 @@ from .dates import router
 from .schedules import router
 from .user_availability import router
 from .team_users import router
-# from .user_roles import router
+from .user_roles import router
 # from .schedule_dates import router
 # from .schedule_date_roles import router
