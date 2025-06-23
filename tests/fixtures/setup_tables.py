@@ -58,7 +58,7 @@ def setup_user_availability(supabase_service):
     user = supabase_service.post("users", body=USER_PAYLOAD)
     date = supabase_service.post("dates", body=DATE_PAYLOAD)
     ua = supabase_service.post("user_availability", body={"user_id": user.get("user_id"), "date": date.get("date")})
-    yield ua
+    yield ua, user, date
     delete_all(supabase_service, table="user_availability")
     delete_all(supabase_service, table="dates")
     delete_all(supabase_service, table="users")
