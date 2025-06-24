@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.models.schedule_date_type import ScheduleDateTypeCreate, ScheduleDateTypeUpdate, ScheduleDateTypeOut 
 from app.utils.supabase import SupabaseService
@@ -14,7 +14,7 @@ async def get_schedule_date_types(service: SupabaseService = Depends(get_supabas
 async def get_schedule_date_type(id: str, service: SupabaseService = Depends(get_supabase_service)):
     return service.get_single(table="schedule_date_types", id=id)
 
-@router.post("/", response_model=ScheduleDateTypeOut)
+@router.post("/", response_model=ScheduleDateTypeOut, status_code=status.HTTP_201_CREATED)
 async def post_schedule_date_types(schedule_date_type: ScheduleDateTypeCreate, service: SupabaseService = Depends(get_supabase_service)):
     return service.post(table="schedule_date_types", body=schedule_date_type.model_dump(exclude_none=True))
 

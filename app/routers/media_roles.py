@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.models.media_role import MediaRoleCreate, MediaRoleUpdate, MediaRoleOut 
 from app.utils.supabase import SupabaseService
@@ -14,7 +14,7 @@ async def get_media_roles(service: SupabaseService = Depends(get_supabase_servic
 async def get_media_role(id: str, service: SupabaseService = Depends(get_supabase_service)):
     return service.get_single(table="media_roles", id=id)
 
-@router.post("/", response_model=MediaRoleOut)
+@router.post("/", response_model=MediaRoleOut, status_code=status.HTTP_201_CREATED)
 async def post_media_roles(media_role: MediaRoleCreate, service: SupabaseService = Depends(get_supabase_service)):
     return service.post(table="media_roles", body=media_role.model_dump(exclude_none=True))
 

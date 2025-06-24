@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.models.proficiency_level import ProficiencyLevelCreate, ProficiencyLevelUpdate, ProficiencyLevelOut 
 from app.utils.supabase import SupabaseService
@@ -14,7 +14,7 @@ async def get_proficiency_levels(service: SupabaseService = Depends(get_supabase
 async def get_proficiency_level(id: str, service: SupabaseService = Depends(get_supabase_service)):
     return service.get_single(table="proficiency_levels", id=id)
 
-@router.post("/", response_model=ProficiencyLevelOut)
+@router.post("/", response_model=ProficiencyLevelOut, status_code=status.HTTP_201_CREATED)
 async def post_proficiency_levels(proficiency_level: ProficiencyLevelCreate, service: SupabaseService = Depends(get_supabase_service)):
     return service.post(table="proficiency_levels", body=proficiency_level.model_dump(exclude_none=True))
 

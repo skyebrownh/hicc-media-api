@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.models.user_availability import UserAvailabilityCreate, UserAvailabilityUpdate, UserAvailabilityOut 
 from app.utils.supabase import SupabaseService
@@ -14,7 +14,7 @@ async def get_user_availability(service: SupabaseService = Depends(get_supabase_
 async def get_user_availability(id: str, service: SupabaseService = Depends(get_supabase_service)):
     return service.get_single(table="user_availability", id=id)
 
-@router.post("/", response_model=UserAvailabilityOut)
+@router.post("/", response_model=UserAvailabilityOut, status_code=status.HTTP_201_CREATED)
 async def post_user_availability(user_availability: UserAvailabilityCreate, service: SupabaseService = Depends(get_supabase_service)):
     payload = user_availability.model_dump(exclude_none=True)
     payload["date"] = payload["date"].isoformat()

@@ -27,7 +27,7 @@ def test_post_user(test_client, clean_users_table):
 
     response = test_client.post("/users", json=valid_json)
     response_json = response.json()
-    assert response.status_code == 200 
+    assert response.status_code == 201
     assert response_json.get("first_name") == "NEW"
     assert response_json.get("is_active") == True 
 

@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.models.team_user import TeamUserCreate, TeamUserUpdate, TeamUserOut 
 from app.utils.supabase import SupabaseService
@@ -14,7 +14,7 @@ async def get_team_users(service: SupabaseService = Depends(get_supabase_service
 async def get_team_user(id: str, service: SupabaseService = Depends(get_supabase_service)):
     return service.get_single(table="team_users", id=id)
 
-@router.post("/", response_model=TeamUserOut)
+@router.post("/", response_model=TeamUserOut, status_code=status.HTTP_201_CREATED)
 async def post_team_users(team_user: TeamUserCreate, service: SupabaseService = Depends(get_supabase_service)):
     return service.post(table="team_users", body=team_user.model_dump(exclude_none=True))
 

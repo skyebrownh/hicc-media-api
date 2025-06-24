@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.models.user import UserCreate, UserUpdate, UserOut
 from app.utils.supabase import SupabaseService
@@ -14,7 +14,7 @@ async def get_users(service: SupabaseService = Depends(get_supabase_service)):
 async def get_user(id: str, service: SupabaseService = Depends(get_supabase_service)):
     return service.get_single(table="users", id=id)
 
-@router.post("/", response_model=UserOut)
+@router.post("/", response_model=UserOut, status_code=status.HTTP_201_CREATED)
 async def post_users(user: UserCreate, service: SupabaseService = Depends(get_supabase_service)):
     return service.post(table="users", body=user.model_dump(exclude_none=True))
 

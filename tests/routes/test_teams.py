@@ -27,7 +27,7 @@ def test_post_team(test_client, clean_teams_table):
 
     response = test_client.post("/teams", json=valid_json)
     response_json = response.json()
-    assert response.status_code == 200 
+    assert response.status_code == 201
     assert response_json.get("team_name") == "NEW TEAM"
     assert response_json.get("is_active") == True 
 

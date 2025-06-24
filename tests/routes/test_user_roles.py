@@ -34,7 +34,7 @@ def test_post_user_roles(test_client, setup_user_role):
 
     response = test_client.post("/user_roles", json=valid_json)
     response_json = response.json()
-    assert response.status_code == 200 
+    assert response.status_code == 201
     assert response_json.get("media_role_id") == media_role2.get("media_role_id")
     assert response_json.get("user_id") == user.get("user_id") 
 

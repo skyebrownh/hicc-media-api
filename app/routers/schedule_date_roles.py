@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.models.schedule_date_role import ScheduleDateRoleCreate, ScheduleDateRoleUpdate, ScheduleDateRoleOut 
 from app.utils.supabase import SupabaseService
@@ -14,7 +14,7 @@ async def get_schedule_date_roles(service: SupabaseService = Depends(get_supabas
 async def get_schedule_date_role(id: str, service: SupabaseService = Depends(get_supabase_service)):
     return service.get_single(table="schedule_date_roles", id=id)
 
-@router.post("/", response_model=ScheduleDateRoleOut)
+@router.post("/", response_model=ScheduleDateRoleOut, status_code=status.HTTP_201_CREATED)
 async def post_schedule_date_roles(schedule_date_role: ScheduleDateRoleCreate, service: SupabaseService = Depends(get_supabase_service)):
     return service.post(table="schedule_date_roles", body=schedule_date_role.model_dump(exclude_none=True))
 

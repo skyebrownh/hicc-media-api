@@ -33,7 +33,7 @@ def test_post_schedule_date_roles(test_client, setup_schedule_date_role):
 
     response = test_client.post("/schedule_date_roles", json=valid_json)
     response_json = response.json()
-    assert response.status_code == 200 
+    assert response.status_code == 201
     assert response_json.get("media_role_id") == media_role.get("media_role_id")
     assert response_json.get("schedule_date_id") == schedule_date.get("schedule_date_id") 
 

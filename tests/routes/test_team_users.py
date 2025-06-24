@@ -30,7 +30,7 @@ def test_post_team_users(test_client, setup_team_user):
 
     response = test_client.post("/team_users", json=valid_json)
     response_json = response.json()
-    assert response.status_code == 200 
+    assert response.status_code == 201
     assert response_json.get("team_id") == team2.get("team_id")
     assert response_json.get("user_id") == user.get("user_id") 
 

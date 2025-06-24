@@ -30,7 +30,7 @@ def test_post_user_availability(test_client, setup_user_availability):
 
     response = test_client.post("/user_availability", json=valid_json)
     response_json = response.json()
-    assert response.status_code == 200 
+    assert response.status_code == 201
     assert response_json.get("date") == "2000-01-01"
     assert response_json.get("user_id") == user.get("user_id") 
 
