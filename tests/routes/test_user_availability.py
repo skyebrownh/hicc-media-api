@@ -13,9 +13,8 @@ def test_get_single_user_availability(test_client, setup_user_availability):
     assert response.status_code == 200
 
     response_json = response.json()
-    assert len(response_json) == 1
-    assert response_json[0].get("user_availability_id") == ua.get("user_availability_id")
-    assert response_json[0].get("user_id") == user.get("user_id")
+    assert response_json.get("user_availability_id") == ua.get("user_availability_id")
+    assert response_json.get("user_id") == user.get("user_id")
 
 def test_post_user_availability(test_client, setup_user_availability):
     ua, user, date, date2 = setup_user_availability

@@ -8,11 +8,11 @@ router = APIRouter(prefix="/schedules")
 
 @router.get("/", response_model=list[ScheduleOut])
 async def get_schedules(service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="schedules")
+    return service.get_all(table="schedules")
 
-@router.get("/{id}", response_model=list[ScheduleOut])
+@router.get("/{id}", response_model=ScheduleOut)
 async def get_schedule(id: str, service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="schedules", id=id)
+    return service.get_single(table="schedules", id=id)
 
 @router.post("/", response_model=ScheduleOut)
 async def post_schedules(schedule: ScheduleCreate, service: SupabaseService = Depends(get_supabase_service)):

@@ -11,8 +11,7 @@ def test_get_single_date(test_client, setup_date):
     assert response.status_code == 200
 
     response_json = response.json()
-    assert len(response_json) == 1
-    assert response_json[0].get("date") == setup_date.get("date")
+    assert response_json.get("date") == setup_date.get("date")
 
 def test_post_date(test_client, clean_dates_table):
     invalid_json1 = {}

@@ -7,14 +7,15 @@ class SupabaseService():
     def __init__(self, url, key):
         self.client: Client = create_client(url, key)
 
-    def get(self, table: str, id: str | None = None):
+    def get_all(self, table: str):
         query = self.client.table(table).select("*")
-
-        if id:
-            query = query.eq(table_id(table), id)
-        
         response = validate(query)
         return response.data
+
+    def get_single(self, table: str, id: str):
+        query = self.client.table(table).select("*").eq(table_id(table), id)
+        response = validate(query)
+        return response.data[0]
 
     def post(self, table: str, body: dict):
         query = self.client.table(table).insert(body)

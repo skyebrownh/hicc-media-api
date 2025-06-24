@@ -8,11 +8,11 @@ router = APIRouter(prefix="/user_roles")
 
 @router.get("/", response_model=list[UserRoleOut])
 async def get_user_roles(service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="user_roles")
+    return service.get_all(table="user_roles")
 
-@router.get("/{id}", response_model=list[UserRoleOut])
+@router.get("/{id}", response_model=UserRoleOut)
 async def get_user_role(id: str, service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="user_roles", id=id)
+    return service.get_single(table="user_roles", id=id)
 
 @router.post("/", response_model=UserRoleOut)
 async def post_user_roles(user_role: UserRoleCreate, service: SupabaseService = Depends(get_supabase_service)):

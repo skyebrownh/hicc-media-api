@@ -11,9 +11,8 @@ def test_get_single_schedule_date_type(test_client, setup_schedule_date_type):
     assert response.status_code == 200
 
     response_json = response.json()
-    assert len(response_json) == 1
-    assert response_json[0].get("schedule_date_type_id") == setup_schedule_date_type.get("schedule_date_type_id")
-    assert response_json[0].get("schedule_date_type_name") == "TEST SCHEDULE DATE TYPE" 
+    assert response_json.get("schedule_date_type_id") == setup_schedule_date_type.get("schedule_date_type_id")
+    assert response_json.get("schedule_date_type_name") == "TEST SCHEDULE DATE TYPE" 
 
 def test_post_schedule_date_type(test_client, clean_schedule_date_types_table):
     invalid_json1 = {}

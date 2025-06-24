@@ -11,9 +11,8 @@ def test_get_single_proficiency_level(test_client, setup_proficiency_level):
     assert response.status_code == 200
 
     response_json = response.json()
-    assert len(response_json) == 1
-    assert response_json[0].get("proficiency_level_id") == setup_proficiency_level.get("proficiency_level_id")
-    assert response_json[0].get("proficiency_level_name") == "TEST PROFICIENCY LEVEL" 
+    assert response_json.get("proficiency_level_id") == setup_proficiency_level.get("proficiency_level_id")
+    assert response_json.get("proficiency_level_name") == "TEST PROFICIENCY LEVEL" 
 
 def test_post_proficiency_level(test_client, clean_proficiency_levels_table):
     invalid_json1 = {}

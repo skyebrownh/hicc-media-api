@@ -8,11 +8,11 @@ router = APIRouter(prefix="/user_availability")
 
 @router.get("/", response_model=list[UserAvailabilityOut])
 async def get_user_availability(service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="user_availability")
+    return service.get_all(table="user_availability")
 
-@router.get("/{id}", response_model=list[UserAvailabilityOut])
+@router.get("/{id}", response_model=UserAvailabilityOut)
 async def get_user_availability(id: str, service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="user_availability", id=id)
+    return service.get_single(table="user_availability", id=id)
 
 @router.post("/", response_model=UserAvailabilityOut)
 async def post_user_availability(user_availability: UserAvailabilityCreate, service: SupabaseService = Depends(get_supabase_service)):

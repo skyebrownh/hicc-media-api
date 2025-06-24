@@ -13,9 +13,8 @@ def test_get_single_user_role(test_client, setup_user_role):
     assert response.status_code == 200
 
     response_json = response.json()
-    assert len(response_json) == 1
-    assert response_json[0].get("user_role_id") == user_role.get("user_role_id")
-    assert response_json[0].get("user_id") == user.get("user_id")
+    assert response_json.get("user_role_id") == user_role.get("user_role_id")
+    assert response_json.get("user_id") == user.get("user_id")
 
 def test_post_user_roles(test_client, setup_user_role):
     user_role, user, media_role, media_role2, proficiency_level = setup_user_role

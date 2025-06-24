@@ -13,9 +13,8 @@ def test_get_single_schedule_date_role(test_client, setup_schedule_date_role):
     assert response.status_code == 200
 
     response_json = response.json()
-    assert len(response_json) == 1
-    assert response_json[0].get("schedule_date_role_id") == schedule_date_role.get("schedule_date_role_id")
-    assert response_json[0].get("media_role_id") == media_role.get("media_role_id")
+    assert response_json.get("schedule_date_role_id") == schedule_date_role.get("schedule_date_role_id")
+    assert response_json.get("media_role_id") == media_role.get("media_role_id")
 
 def test_post_schedule_date_roles(test_client, setup_schedule_date_role):
     schedule_date_role, schedule_date, date, media_role, media_role2 = setup_schedule_date_role

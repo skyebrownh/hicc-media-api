@@ -8,11 +8,11 @@ router = APIRouter(prefix="/dates")
 
 @router.get("/", response_model=list[DateOut])
 async def get_dates(service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="dates")
+    return service.get_all(table="dates")
 
-@router.get("/{id}", response_model=list[DateOut])
+@router.get("/{id}", response_model=DateOut)
 async def get_date(id: str, service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="dates", id=id)
+    return service.get_single(table="dates", id=id)
 
 @router.post("/", response_model=DateOut)
 async def post_dates(date: DateCreate, service: SupabaseService = Depends(get_supabase_service)):

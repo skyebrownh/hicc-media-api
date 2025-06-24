@@ -8,11 +8,11 @@ router = APIRouter(prefix="/teams")
 
 @router.get("/", response_model=list[TeamOut])
 async def get_teams(service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="teams")
+    return service.get_all(table="teams")
 
-@router.get("/{id}", response_model=list[TeamOut])
+@router.get("/{id}", response_model=TeamOut)
 async def get_team(id: str, service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="teams", id=id)
+    return service.get_single(table="teams", id=id)
 
 @router.post("/", response_model=TeamOut)
 async def post_teams(user: TeamCreate, service: SupabaseService = Depends(get_supabase_service)):
