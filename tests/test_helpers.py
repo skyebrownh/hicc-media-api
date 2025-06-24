@@ -1,5 +1,7 @@
 import pytest
-from app.utils.helpers import *
+from app.utils.helpers import table_id 
+
+__all__ = ["table_id"]
 
 def test_table_id():
     assert table_id("users") == "user_id"

@@ -1,6 +1,21 @@
 import pytest
 from .helpers import delete_all
 
+__all__ = [
+    "clean_users_table",
+    "clean_teams_table",
+    "clean_media_roles_table",
+    "clean_proficiency_levels_table",
+    "clean_schedule_date_types_table",
+    "clean_dates_table",
+    "clean_schedules_table",
+    "clean_user_availability_table",
+    "clean_team_users_table",
+    "clean_user_roles_table",
+    "clean_schedule_dates_table",
+    "clean_schedule_date_roles_table",
+]
+
 @pytest.fixture
 def clean_users_table(supabase_service):
     delete_all(supabase_service, table="users")

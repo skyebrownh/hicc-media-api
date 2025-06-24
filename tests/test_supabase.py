@@ -1,5 +1,7 @@
 import pytest
-from app.utils.supabase import *
+from fastapi import HTTPException
+
+from app.utils.supabase import validate
 
 def test_supabase_post(supabase_service, clean_teams_table):
     response = supabase_service.post("teams", body={"team_name": "TEST TEAM", "lookup": "testteam"})
@@ -112,10 +114,6 @@ def test_supabase_delete(supabase_service, clean_teams_table):
         supabase_service.get("teams", id=delete_team_id)
 
 # helper functions
-def test_table_id():
-    assert table_id("users") == "user_id"
-    assert table_id("user_availability") == "user_availability_id"
-
 def test_validate(supabase_service, clean_teams_table):
     # setup: insert team
     supabase_service.post("teams", body={"team_name": "TEST", "lookup": "test"})

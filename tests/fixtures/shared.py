@@ -6,6 +6,11 @@ from app.utils.supabase import SupabaseService
 from app.utils.env import SUPABASE_TEST_URL, SUPABASE_TEST_API_KEY
 from app.dependencies import get_supabase_service 
 
+__all__ = [
+    "supabase_service",
+    "test_client"
+]
+
 @pytest.fixture(scope="session")
 def supabase_service():
     return SupabaseService(url=SUPABASE_TEST_URL, key=SUPABASE_TEST_API_KEY)
