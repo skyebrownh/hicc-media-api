@@ -20,9 +20,11 @@ FastAPI + Supabase + Redis backend for a scheduling application (specifically fo
     - `.env`
         - `SUPABASE_URL`
         - `SUPABASE_API_KEY`
+        - `FAST_API_KEY` - `x-api-key` header is used for auth
     - `test.env`
         - `SUPABASE_TEST_URL`
         - `SUPABASE_TEST_API_KEY`
+        - `FAST_API_KEY` - `x-api-key` header is used for auth
 5. Run tests (optional)
     ```bash
     pytest
@@ -31,8 +33,8 @@ FastAPI + Supabase + Redis backend for a scheduling application (specifically fo
     ```bash
     fastapi dev app/main.py
     ```
-    - Server is running on localhost:8000
-    - Docs are availabile at localhost:8000/docs
+    - Server is running on [localhost:8000](localhost:8000)
+    - Docs are availabile at [localhost:8000/docs](localhost:8000/docs)
 
 ## Roadmap
 
