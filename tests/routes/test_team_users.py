@@ -13,9 +13,8 @@ def test_get_single_team_user(test_client, setup_team_user):
     assert response.status_code == 200
 
     response_json = response.json()
-    assert len(response_json) == 1
-    assert response_json[0].get("team_user_id") == team_user.get("team_user_id")
-    assert response_json[0].get("user_id") == user.get("user_id")
+    assert response_json.get("team_user_id") == team_user.get("team_user_id")
+    assert response_json.get("user_id") == user.get("user_id")
 
 def test_post_team_users(test_client, setup_team_user):
     team_user, team, user, team2 = setup_team_user
@@ -31,7 +30,7 @@ def test_post_team_users(test_client, setup_team_user):
 
     response = test_client.post("/team_users", json=valid_json)
     response_json = response.json()
-    assert response.status_code == 200 
+    assert response.status_code == 201
     assert response_json.get("team_id") == team2.get("team_id")
     assert response_json.get("user_id") == user.get("user_id") 
 

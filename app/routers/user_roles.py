@@ -1,4 +1,4 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter, Depends, status
 
 from app.models.user_role import UserRoleCreate, UserRoleUpdate, UserRoleOut 
 from app.utils.supabase import SupabaseService
@@ -8,13 +8,13 @@ router = APIRouter(prefix="/user_roles")
 
 @router.get("/", response_model=list[UserRoleOut])
 async def get_user_roles(service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="user_roles")
+    return service.get_all(table="user_roles")
 
-@router.get("/{id}", response_model=list[UserRoleOut])
+@router.get("/{id}", response_model=UserRoleOut)
 async def get_user_role(id: str, service: SupabaseService = Depends(get_supabase_service)):
-    return service.get(table="user_roles", id=id)
+    return service.get_single(table="user_roles", id=id)
 
-@router.post("/", response_model=UserRoleOut)
+@router.post("/", response_model=UserRoleOut, status_code=status.HTTP_201_CREATED)
 async def post_user_roles(user_role: UserRoleCreate, service: SupabaseService = Depends(get_supabase_service)):
     return service.post(table="user_roles", body=user_role.model_dump(exclude_none=True))
 

@@ -11,9 +11,8 @@ def test_get_single_media_role(test_client, setup_media_role):
     assert response.status_code == 200
 
     response_json = response.json()
-    assert len(response_json) == 1
-    assert response_json[0].get("media_role_id") == setup_media_role.get("media_role_id")
-    assert response_json[0].get("media_role_name") == "TEST MEDIA ROLE"
+    assert response_json.get("media_role_id") == setup_media_role.get("media_role_id")
+    assert response_json.get("media_role_name") == "TEST MEDIA ROLE"
 
 def test_post_media_role(test_client, clean_media_roles_table):
     invalid_json1 = {}
@@ -28,7 +27,7 @@ def test_post_media_role(test_client, clean_media_roles_table):
 
     response = test_client.post("/media_roles", json=valid_json)
     response_json = response.json()
-    assert response.status_code == 200 
+    assert response.status_code == 201
     assert response_json.get("media_role_name") == "NEW MEDIA ROLE"
     assert response_json.get("is_active") == True 
 

@@ -11,9 +11,8 @@ def test_get_single_user(test_client, setup_user):
     assert response.status_code == 200
 
     response_json = response.json()
-    assert len(response_json) == 1
-    assert response_json[0].get("user_id") == setup_user.get("user_id")
-    assert response_json[0].get("first_name") == "TEST"
+    assert response_json.get("user_id") == setup_user.get("user_id")
+    assert response_json.get("first_name") == "TEST"
 
 def test_post_user(test_client, clean_users_table):
     invalid_json1 = {}
@@ -28,7 +27,7 @@ def test_post_user(test_client, clean_users_table):
 
     response = test_client.post("/users", json=valid_json)
     response_json = response.json()
-    assert response.status_code == 200 
+    assert response.status_code == 201
     assert response_json.get("first_name") == "NEW"
     assert response_json.get("is_active") == True 
 
