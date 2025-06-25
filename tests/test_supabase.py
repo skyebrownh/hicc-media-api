@@ -14,22 +14,22 @@ def test_supabase_post(supabase_service, clean_teams_table):
     with pytest.raises(TypeError):
         supabase_service.post(None)
 
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="does not exist"):
         supabase_service.post("invalid_table", {"team_name": "VALID", "lookup": "valid"})
     
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="null violation"):
         supabase_service.post("teams", {})
 
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="parse"):
         supabase_service.post("teams", [])
 
-    with pytest.raises(HTTPException, match="Not Found"):
+    with pytest.raises(HTTPException, match="not found"):
         supabase_service.post("teams", "invalid")
 
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="null violation"):
         supabase_service.post("teams", {"team_name": "TEST"})
 
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="null violation"):
         supabase_service.post("teams", {"lookup": "test"})
 
 def test_supabase_get_all(supabase_service, clean_teams_table):
@@ -45,10 +45,10 @@ def test_supabase_get_all(supabase_service, clean_teams_table):
     with pytest.raises(TypeError):
         supabase_service.get_all()
 
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException):
         supabase_service.get_all(None)
 
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="does not exist"):
         supabase_service.get_all("invalid_table")
 
 def test_supabase_get(supabase_service, clean_teams_table):
@@ -65,7 +65,7 @@ def test_supabase_get(supabase_service, clean_teams_table):
     assert responseB.get("lookup") == "team_b"
     assert responseB.get("team_id") == team_b_id
 
-    with pytest.raises(HTTPException, match="Not Found"):
+    with pytest.raises(HTTPException, match="not found"):
         supabase_service.get_single("teams", id="00000000-0000-0000-0000-000000000000")
 
 def test_supabase_update(supabase_service, clean_teams_table):
@@ -82,16 +82,16 @@ def test_supabase_update(supabase_service, clean_teams_table):
     with pytest.raises(TypeError):
         supabase_service.update()
 
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="does not exist"):
         supabase_service.update("invalid_table", {"team_name": "TEAM NAME"}, id=update_team_id)
 
     with pytest.raises(HTTPException, match="cannot be updated"):
         supabase_service.update("teams", body={"team_id": "00000000-0000-0000-0000-000000000000"}, id=update_team_id)
 
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="null violation"):
         supabase_service.update("teams", body={"team_name": None}, id=update_team_id)
 
-    with pytest.raises(HTTPException, match="Not Found"):
+    with pytest.raises(HTTPException, match="not found"):
         supabase_service.update("teams", body={"team_name": "TEAM NAME"}, id="00000000-0000-0000-0000-000000000000")
 
 def test_supabase_delete(supabase_service, clean_teams_table):
@@ -107,10 +107,10 @@ def test_supabase_delete(supabase_service, clean_teams_table):
     with pytest.raises(TypeError):
         supabase_service.delete()
 
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="does not exist"):
         supabase_service.delete("invalid_table", id=delete_team_id)
 
-    with pytest.raises(HTTPException, match="Not Found"):
+    with pytest.raises(HTTPException, match="not found"):
         supabase_service.get_single("teams", id=delete_team_id)
 
 # helper functions
@@ -119,11 +119,11 @@ def test_validate(supabase_service, clean_teams_table):
     supabase_service.post("teams", body={"team_name": "TEST", "lookup": "test"})
 
     query_api_error = supabase_service.client.table("invalid").select("*")
-    with pytest.raises(HTTPException, match="API Error"):
+    with pytest.raises(HTTPException, match="does not exist"):
         validate(query_api_error)
 
     query_not_found_error = supabase_service.client.table("teams").select("*").eq("team_id", "00000000-0000-0000-0000-000000000000")
-    with pytest.raises(HTTPException, match="Not Found"):
+    with pytest.raises(HTTPException, match="not found"):
         validate(query_not_found_error)
     
     query = supabase_service.client.table("teams").select("*")

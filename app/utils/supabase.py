@@ -40,10 +40,29 @@ def validate(query):
     try:
         response = query.execute()
     except PostgrestAPIError as e:
-        print("🔥 Supabase error:", e.message)
-        raise HTTPException(status_code=500, detail=f"API Error: {e.message}")
+        raise handle_supabase_error(e)
 
-    if not response or len(response.data) == 0:
-        raise HTTPException(status_code=404, detail="Resource Not Found")
+    if len(response.data) == 0:
+        raise HTTPException(status_code=404, detail="Resource not found")
     
     return response
+
+def handle_supabase_error(error: PostgrestAPIError) -> HTTPException:
+    code = error.code if hasattr(error, "code") else None
+    message = error.message if hasattr(error, "message") else str(error)
+
+    match code: 
+        case "23505":
+            return HTTPException(status_code=409, detail="Duplicate entry")
+        case "23503":
+            return HTTPException(status_code=400, detail="Invalid foreign key reference")
+        case "23502":
+            return HTTPException(status_code=400, detail=f"Not null violation: {message}")
+        case "PGRST100":
+            return HTTPException(status_code=400, detail="Failed to parse parameters")
+        case "42P01":
+            return HTTPException(status_code=404, detail="Requested resource does not exist")
+        case 404:
+            return HTTPException(status_code=404, detail="Requested resource does not exist")
+        case _:
+            return HTTPException(status_code=500, detail=message)
